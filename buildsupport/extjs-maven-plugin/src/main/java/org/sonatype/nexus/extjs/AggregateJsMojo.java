@@ -16,6 +16,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.Writer;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 
@@ -108,7 +109,7 @@ public class AggregateJsMojo
 
     // aggregate all class sources
     getLog().info("Writing: " + outputFile);
-    Writer output = new BufferedWriter(new FileWriter(outputFile));
+    Writer output = Files.newBufferedWriter(outputFile.toPath());
     try {
       FileAppender appender;
       if (omit) {

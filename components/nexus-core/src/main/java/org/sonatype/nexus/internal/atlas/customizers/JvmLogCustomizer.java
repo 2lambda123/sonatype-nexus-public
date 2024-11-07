@@ -12,12 +12,14 @@
  */
 package org.sonatype.nexus.internal.atlas.customizers;
 
+import io.github.pixee.security.BoundedLineReader;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.List;
 
@@ -66,10 +68,10 @@ public class JvmLogCustomizer
 
         if (logFile != null) {
           try (BufferedReader reader = new BufferedReader(new FileReader(logFile));
-               BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+               BufferedWriter writer = Files.newBufferedWriter(file.toPath())) {
 
             String line;
-            while ((line = reader.readLine()) != null) {
+            while ((line = BoundedLineReader.readLine(reader, 5_000_000)) != null) {
               String redactedLine = maybeMaskSensitiveData(line);
               writer.write(redactedLine);
               writer.newLine();
